@@ -1,0 +1,21 @@
+{
+  "name": "tech_world_bot_service",
+  "version": "1.0.0",
+  "description": "LiveKit bot service for Tech World - handles Claude API integration via data channels",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@livekit/rtc-node": "^0.12.0",
+    "dotenv": "^16.4.0",
+    "livekit-server-sdk": "^2.4.0"
+  },
+  "devDependencies": {},
+  "private": true
+}
