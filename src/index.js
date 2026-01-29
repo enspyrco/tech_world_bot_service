@@ -162,31 +162,32 @@ async function main() {
 
     // Handle chat messages
     if (topic === 'chat' && message.text) {
-      console.log(`  Chat message: "${message.text.substring(0, 50)}${message.text.length > 50 ? '...' : ''}"`);
+      const senderName = message.senderName || senderId;
+      console.log(`  Chat from ${senderName}: "${message.text.substring(0, 50)}${message.text.length > 50 ? '...' : ''}"`);
 
       // Call Claude API
       const claudeResponse = await callClaude(senderId, message.text);
       console.log(`  Claude response: "${claudeResponse.substring(0, 50)}${claudeResponse.length > 50 ? '...' : ''}"`);
 
-      // Send response back
+      // Broadcast response to ALL participants (shared chat)
       const response = {
         type: 'chat-response',
         messageId: message.id,
         text: claudeResponse,
+        senderName: BOT_NAME,
         botId: BOT_IDENTITY,
         timestamp: Date.now(),
       };
 
       const responseData = new TextEncoder().encode(JSON.stringify(response));
-      const destinationIdentities = participant ? [participant.identity] : undefined;
 
+      // No destinationIdentities = broadcast to everyone
       await room.localParticipant.publishData(responseData, {
         reliable: true,
         topic: 'chat-response',
-        destinationIdentities,
       });
 
-      console.log(`  Sent chat response to ${senderId}`);
+      console.log(`  Broadcast chat response to all participants`);
     }
   });
 
